@@ -1,5 +1,6 @@
 todoForm.title.addEventListener('keyup', (e) => validateField(e.target));
 todoForm.title.addEventListener('blur', (e) => validateField(e.target));
+
 todoForm.description.addEventListener('input', (e) => validateField(e.target));
 todoForm.description.addEventListener('blur', (e) => validateField(e.target));
 
@@ -9,6 +10,7 @@ todoForm.dueDate.addEventListener('blur', (e) => validateField(e.target));
 todoForm.addEventListener('submit', onSubmit);
 
 const todoListElement = document.getElementById('todoList');
+
 let titleValid = true;
 let descriptionValid = true;
 let dueDateValid = true;
@@ -53,6 +55,7 @@ function validateField(field) {
       break;
     }
   }
+
   field.previousElementSibling.innerText = validationMessage;
   field.previousElementSibling.classList.remove('hidden');
 }
@@ -84,31 +87,47 @@ function renderList() {
   console.log('rendering');
   api.getAll().then((tasks) => {
     todoListElement.innerHTML = '';
+
     if (tasks && tasks.length > 0) {
-      tasks.forEach((task) => {
-        todoListElement.insertAdjacentHTML('beforeend', renderTask(task));
-      });
-    }
+  tasks.sort(function (a, b) {
+    return a.dueDate > b.dueDate;
   });
+
+  tasks.sort(function (a, b) {
+    return a.completed > b.completed;
+  });
+  
+  tasks.forEach((task) => {
+    todoListElement.insertAdjacentHTML("beforeend", renderTask(task));
+  });
+}
+});
 }
 
 function renderTask({ id, title, description, dueDate }) {
-  let html = `
-    <li class="select-none mt-2 py-2 border-b border-amber-300">
-      <div class="flex items-center">
-        <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 uppercase">${title}</h3>
-        <div>
-          <span>${dueDate}</span>
-          <button onclick="deleteTask(${id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>
-        </div>
-      </div>`;
+  const checkCompleted =  completed == true ? "checked" : "";
+  const bgColor = completed == true ? "bg-gray-100 rounded" : "";
+
+  let html = `<li class="select-none mt-2 py-2 border-b border-amber-300 ${boxcss}">
+  <div class="flex items-center p-1" id=${id}>
+    <h3 class="mb-5 flex-1 text-xl font-bold text-cyan-400 uppercase">${title}</h3>
+    <div>
+      <span>${dueDate}</span>
+      <button onclick="deleteTask(${id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>  
+     
+      <input onclick="apiUpdate(${id})" type="checkbox" id="checkBox" name="checkBox"${checkmark}>
+      <label for="completedBox">Utförd</label>
+   
+      </div>
+  </div>`;
 
   description &&
     (html += `
-      <p class="ml-8 mt-2 text-xs italic">${description}</p>
-  `);
+      <p class="ml-8 mt-2 text-xs italic">${description}</p>`);
+
   html += `
     </li>`;
+
   /***********************Labb 2 ***********************/
   /* I ovanstående template-sträng skulle det vara lämpligt att sätta en checkbox, eller ett annat element som någon kan 
   klicka på för att markera en uppgift som färdig. Det elementet bör, likt knappen för delete, också lyssna efter ett event 
@@ -120,11 +139,18 @@ function renderTask({ id, title, description, dueDate }) {
 
   return html;
 }
+
+function completedTask(id) {
+  api.update(id);
+}
+
 function deleteTask(id) {
   api.remove(id).then((result) => {
     renderList();
   });
 }
+
+renderList();
 
 /***********************Labb 2 ***********************/
 /* Här skulle det vara lämpligt att skriva den funktion som angivits som eventlyssnare för när någon markerar en uppgift som färdig. 
@@ -152,5 +178,3 @@ en callbackfunktion som ska hantera det som kommer tillbaka från servern via v�
 Inuti den funktionen bör listan med uppgifter renderas på nytt, så att den nyligen gjorda förändringen syns. */
 
 /***********************Labb 2 ***********************/
-
-renderList();

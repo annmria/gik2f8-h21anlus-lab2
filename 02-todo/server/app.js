@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const fs = require('fs/promises');
-
 const PORT = 5000;
+
 app
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
@@ -28,6 +28,7 @@ app.post('/tasks', async (req, res) => {
     const listBuffer = await fs.readFile('./tasks.json');
     const currentTasks = JSON.parse(listBuffer);
     let maxTaskId = 1;
+    
     if (currentTasks && currentTasks.length > 0) {
       maxTaskId = currentTasks.reduce(
         (maxId, currentElement) =>
@@ -52,19 +53,50 @@ app.delete('/tasks/:id', async (req, res) => {
     const id = req.params.id;
     const listBuffer = await fs.readFile('./tasks.json');
     const currentTasks = JSON.parse(listBuffer);
+
     if (currentTasks.length > 0) {
       await fs.writeFile(
         './tasks.json',
         JSON.stringify(currentTasks.filter((task) => task.id != id))
       );
       res.send({ message: `Uppgift med id ${id} togs bort` });
-    } else {
+    }
+
+    else {
       res.status(404).send({ error: 'Ingen uppgift att ta bort' });
     }
-  } catch (error) {
+  } 
+
+  catch (error) {
     res.status(500).send({ error: error.stack });
   }
 });
+
+app.put('/tasks/:id', async (req, res) => {
+  console.log(req)
+  try {
+    const id = req.params.id;
+    const taskJson =  await fs.readFile("./tasks.json");
+    const currentTasks = JSON.parse(taskJson);
+
+    currentTasks.forEach(element => {
+      if (element.id == id && element.completed == true) {
+        element.completed = false;
+      }
+
+      else if (element.id == id && element.completed == false) {
+        element.completed = true;
+      }
+    });
+    await fs.writeFile("./tasks.json", JSON.stringify(currentTasks));
+  }
+  catch(error) {
+    res.status(500).send({ error: error.stack });
+  }
+});
+
+
+app.listen(PORT, () => console.log('Server running on http://localhost:5000'));
 
 /***********************Labb 2 ***********************/
 /* Här skulle det vara lämpligt att skriva en funktion som likt post eller delete tar kan hantera PUT- eller PATCH-anrop 
@@ -79,4 +111,3 @@ för exempel från lektion 5 och innehåller inte någon kod som används vidare
 /* Med app.listen säger man åte servern att starta. Första argumentet är port - dvs. det portnummer man vill att servern ska köra på. 
 Det sattes till 5000 på rad 9. Det andra argumentet är en anonym arrow-funktion som körs när servern har lyckats starta. 
 Här skrivs bara ett meddelande ut som berättar att servern kör, så att man får feedback på att allt körts igång som det skulle. */
-app.listen(PORT, () => console.log('Server running on http://localhost:5000'));

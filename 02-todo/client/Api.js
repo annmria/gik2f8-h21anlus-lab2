@@ -1,4 +1,3 @@
-
 class Api {
   url = '';
   constructor(url) {
@@ -40,6 +39,18 @@ class Api {
       .catch((err) => console.log(err));
   }
 
+  update(id, status) {
+    const JSONData = JSON.stringify({"status": status});
+    return fetch(`${this.url}/${id}`, {
+      method: 'PUT',
+      body: JSONData,
+      headers: {"Content-Type": "application/json"}
+    })
+      .then((result) => result)
+      .catch((err) => console.log(err));
+  }
+}
+
   /***********************Labb 2 ***********************/
   /* Här skulle det vara lämpligt att skriva en metod likt getAll, create och delete anropas från script.js när 
   någon har markerat en uppgift som färdig. Denna metod bör ansvara för att göra en PUT eller PATCH-förfrågan till 
@@ -77,4 +88,3 @@ class Api {
   */
 
   /***********************Labb 2 ***********************/
-}
