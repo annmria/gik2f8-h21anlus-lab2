@@ -28,8 +28,7 @@ function validateField(field) {
         validationMessage = "Fältet 'Titel' måste innehålla minst 2 tecken.";
       } else if (value.length > 100) {
         titleValid = false;
-        validationMessage =
-          "Fältet 'Titel' får inte innehålla mer än 100 tecken.";
+        validationMessage = "Fältet 'Titel' får inte innehålla mer än 100 tecken.";
       } else {
         titleValid = true;
       }
@@ -38,8 +37,7 @@ function validateField(field) {
     case 'description': {
       if (value.length > 500) {
         descriptionValid = false;
-        validationMessage =
-          "Fältet 'Beskrvining' får inte innehålla mer än 500 tecken.";
+        validationMessage = "Fältet 'Beskrvining' får inte innehålla mer än 500 tecken.";
       } else {
         descriptionValid = true;
       }
@@ -122,7 +120,7 @@ function renderTask({ id, title, description, dueDate, completed }) {
 
   description &&
     (html += `
-      <p class="ml-8 mt-2 text-xs italic">${description}</p>`);
+      <p class="ml-8 mt-1 text-xs italic">${description}</p>`);
 
   html += `
     </li>`;
