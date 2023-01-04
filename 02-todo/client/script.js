@@ -104,21 +104,20 @@ function renderList() {
 });
 }
 
-function renderTask({ id, title, description, dueDate }) {
+function renderTask({ id, title, description, dueDate, completed }) {
   const checkCompleted =  completed == true ? "checked" : "";
   const bgColor = completed == true ? "bg-gray-100 rounded" : "";
 
-  let html = `<li class="select-none mt-2 py-2 border-b border-amber-300 ${boxcss}">
-  <div class="flex items-center p-1" id=${id}>
-    <h3 class="mb-5 flex-1 text-xl font-bold text-cyan-400 uppercase">${title}</h3>
+  let html =    `<li class="select-none mt-2 py-2 border-b border-amber-300 ${bgColor}">
+  <div class="flex items-center" id=${id}>
+    <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 uppercase">${title}</h3>
     <div>
       <span>${dueDate}</span>
-      <button onclick="deleteTask(${id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>  
-     
-      <input onclick="apiUpdate(${id})" type="checkbox" id="checkBox" name="checkBox"${checkmark}>
-      <label for="completedBox">Utförd</label>
-   
-      </div>
+      <button onclick="deleteTask(${id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded ml-2">Ta bort</button>
+      <br>
+      <input onclick="finishedTask(${id})" type="checkbox" id="completeBox" name="completeBox"${checkCompleted}>
+      <label for="completedBox">Utförd</label><br>
+    </div>
   </div>`;
 
   description &&
