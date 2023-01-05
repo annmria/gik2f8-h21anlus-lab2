@@ -86,8 +86,9 @@ function renderList() {
   api.getAll().then((tasks) => {
     todoListElement.innerHTML = '';
 
+    tasks.sort((b, a) => (a.dueDate < b.dueDate) ? 1 : (a.dueDate > b.dueDate) ? -1 : 0);
     if (tasks && tasks.length > 0) {
-  tasks.sort(function (a, b) {
+    tasks.sort(function (a, b) {
     return a.dueDate > b.dueDate;
   });
 
