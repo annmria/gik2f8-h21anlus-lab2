@@ -117,10 +117,10 @@ function renderTask({ id, title, description, dueDate, completed }) {
       <div>
         <div>
           <span>${dueDate}</span>
-          <button onclick="deleteTask(${id})" class="inline-block bg-green-500 text-xs border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>
+          <button onclick="deleteTask(${id})" class="inline-block bg-green-500 text-xs border border-white px-3 py-1 rounded-md ml-2 hover:bg-green-400">Ta bort</button>
         </div>  
         <div>
-          <label>Uppgift utförd</label>
+          <label>Utförd</label>
           <input class="checkedBox" type="checkbox" onclick="updateTask(${id}, event)"${CheckBoxStatus}>
         </div> 
       </div>
@@ -133,17 +133,17 @@ function renderTask({ id, title, description, dueDate, completed }) {
       <div>
         <div>
           <span>${dueDate}</span>
-          <button onclick="deleteTask(${id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>
+          <button onclick="deleteTask(${id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded-md ml-2 hover:bg-yellow-400">Ta bort</button>
         </div>  
         <div>
-          <label>Uppgift utförd</label>
+          <label>Utförd</label>
           <input class="checkedBox" type="checkbox" onclick="updateTask(${id}, event)"${CheckBoxStatus}>
         </div> 
       </div>
     </div>`; }
 
     description &&
-    (html += `<p class="ml-8 mt-1 text-xs italic">${description}</p>`);
+    (html += `<p class="ml-8 mt-1 text-xs">${description}</p>`);
 
   html += `</li>`;
 
@@ -198,8 +198,7 @@ function updateTask(id, event) {
   console.log("Update task");
   console.log("Checkedbox:", taskChecked);
   const data = {
-    completed: taskChecked,
-  };
+    completed: taskChecked, };
   api.update(id, data).then((result) => renderList());
 }
 
