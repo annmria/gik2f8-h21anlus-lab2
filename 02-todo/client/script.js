@@ -113,7 +113,7 @@ function renderTask({ id, title, description, dueDate, completed }) {
   if (completed) {
     html = `  <li class="select-none mt-2 py-2 border-b border-gray-300 bg-gray-300">
     <div class="flex items-center">
-      <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 italic uppercase">${title}</h3>
+      <h3 class="mb-3 flex-1 text-xl font-bold text-pink-900 italic uppercase">${title}</h3>
       <div>
         <div>
           <span>${dueDate}</span>
@@ -129,7 +129,7 @@ function renderTask({ id, title, description, dueDate, completed }) {
     else {
     html = `  <li class="select-none mt-2 py-2 border-b border-amber-300">
     <div class="flex items-center">
-      <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 uppercase">${title}</h3>
+      <h3 class="mb-3 flex-1 text-xl font-bold text-pink-700 uppercase">${title}</h3>
       <div>
         <div>
           <span>${dueDate}</span>
@@ -143,7 +143,7 @@ function renderTask({ id, title, description, dueDate, completed }) {
     </div>`; }
 
     description &&
-    (html += `<p class="ml-8 mt-1 text-xs">${description}</p>`);
+    (html += `<p class="ml-8 mt-1 text-xs italic">${description}</p>`);
 
   html += `</li>`;
 
