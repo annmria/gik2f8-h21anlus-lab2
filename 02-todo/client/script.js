@@ -92,6 +92,7 @@ function renderList() {
     return a.dueDate > b.dueDate;
   });
 
+  tasks.sort((b, a) => (a.completed < b.completed) ? 1 : (a.completed > b.completed) ? -1 : 0);
   tasks.sort(function (a, b) {
     return a.completed > b.completed;
   });
@@ -104,7 +105,49 @@ function renderList() {
 }
 
 function renderTask({ id, title, description, dueDate, completed }) {
-  const checkCompleted =  completed == true ? "checked" : "";
+  let CheckBoxStatus = "";
+  if (completed) {
+    CheckBoxStatus = "checked"; }
+    
+  let html = "";
+  if (completed) {
+    html = `  <li class="select-none mt-2 py-2 border-b border-gray-300 bg-gray-300">
+    <div class="flex items-center">
+      <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 italic uppercase">${title}</h3>
+      <div>
+        <div>
+          <span>${dueDate}</span>
+          <button onclick="deleteTask(${id})" class="inline-block bg-green-500 text-xs border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>
+        </div>  
+        <div>
+          <label>Uppgift utförd</label>
+          <input class="checkedBox" type="checkbox" onclick="updateTask(${id}, event)"${CheckBoxStatus}>
+        </div> 
+      </div>
+    </div>`; } 
+    
+    else {
+    html = `  <li class="select-none mt-2 py-2 border-b border-amber-300">
+    <div class="flex items-center">
+      <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 uppercase">${title}</h3>
+      <div>
+        <div>
+          <span>${dueDate}</span>
+          <button onclick="deleteTask(${id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>
+        </div>  
+        <div>
+          <label>Uppgift utförd</label>
+          <input class="checkedBox" type="checkbox" onclick="updateTask(${id}, event)"${CheckBoxStatus}>
+        </div> 
+      </div>
+    </div>`; }
+
+    description &&
+    (html += `<p class="ml-8 mt-1 text-xs italic">${description}</p>`);
+
+  html += `</li>`;
+
+  /* const checkCompleted =  completed == true ? "checked" : "";
   const bgColor = completed == true ? "bg-gray-100 rounded" : "";
 
   let html =    `<li class="select-none mt-2 py-2 border-b border-amber-300 ${bgColor}">
@@ -124,7 +167,10 @@ function renderTask({ id, title, description, dueDate, completed }) {
       <p class="ml-8 mt-1 text-xs italic">${description}</p>`);
 
   html += `
-    </li>`;
+    </li>`; */
+    
+  return html;
+}
 
   /***********************Labb 2 ***********************/
   /* I ovanstående template-sträng skulle det vara lämpligt att sätta en checkbox, eller ett annat element som någon kan 
@@ -135,8 +181,6 @@ function renderTask({ id, title, description, dueDate, completed }) {
   Det skulle kunna vara ett checkbox-element som har attributet on[event]="updateTask(id)". */
   /***********************Labb 2 ***********************/
 
-  return html;
-}
 
 function completedTask(id) {
   api.update(id);
@@ -146,6 +190,17 @@ function deleteTask(id) {
   api.remove(id).then((result) => {
     renderList();
   });
+}
+
+function updateTask(id, event) {
+  event.preventDefault();
+  let taskChecked = event.target.checked;
+  console.log("Update task");
+  console.log("Checkedbox:", taskChecked);
+  const data = {
+    completed: taskChecked,
+  };
+  api.update(id, data).then((result) => renderList());
 }
 
 renderList();
